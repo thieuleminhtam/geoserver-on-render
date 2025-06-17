@@ -1,14 +1,17 @@
-FROM openjdk:11
+FROM tomcat:9-jdk11
 
 ENV GEOSERVER_VERSION 2.22.2
-ENV GEOSERVER_HOME /opt/geoserver
 
+# Tải file WAR trực tiếp từ SourceForge
 RUN apt-get update && \
-    apt-get install -y curl unzip && \
-    curl -L -o /tmp/geoserver.zip "https://downloads.sourceforge.net/project/geoserver/GeoServer/${GEOSERVER_VERSION}/geoserver-${GEOSERVER_VERSION}-bin.zip" && \
-    unzip /tmp/geoserver.zip -d /opt && \
-    mv /opt/geoserver-${GEOSERVER_VERSION} ${GEOSERVER_HOME} && \
-    rm /tmp/geoserver.zip
+    apt-get install -y curl && \
+    curl -L -o /usr/local/tomcat/webapps/geoserver.war \
+    "https://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_VERSION}/geoserver-${GEOSERVER_VERSION}-war.zip/download" && \
+    cd /usr/local/tomcat/webapps && \
+    unzip geoserver.war -d geoserver && \
+    rm geoserver.war
 
+# Mở cổng Tomcat
 EXPOSE 8080
-CMD ["java", "-jar", "/opt/geoserver/start.jar"]
+
+CMD ["catalina.sh", "run"]
