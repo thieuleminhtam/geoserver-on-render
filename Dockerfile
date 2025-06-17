@@ -9,3 +9,6 @@ RUN apt-get update && \
     unzip /tmp/geoserver-war.zip -d /tmp && \
     mv /tmp/geoserver.war /usr/local/tomcat/webapps/geoserver.war && \
     rm -rf /tmp/geoserver-war.zip
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
